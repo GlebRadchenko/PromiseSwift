@@ -9,12 +9,11 @@
 import Foundation
 
 open class Promise<Element> {
-    
     public typealias Function = (_ result: @escaping Resolve) -> Void
     public typealias Resolve = (Result<Element>) -> Void
     
     fileprivate var queue: DispatchQueue
-    public var function: Function
+    fileprivate var function: Function
     
     public init(queue: DispatchQueue = .main, _ function: @escaping Function) {
         self.queue = queue
@@ -90,3 +89,4 @@ open class Promise<Element> {
         }
     }
 }
+
