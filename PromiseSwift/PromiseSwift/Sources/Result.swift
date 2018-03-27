@@ -8,12 +8,12 @@
 
 import Foundation
 
-public enum Result<T> {
+public enum PromiseResult<T> {
     case value(element: T)
     case error(error: Error)
 }
 
-extension Result {
+extension PromiseResult {
     public func unbox() -> T? {
         switch self {
         case let .value(element):
@@ -23,7 +23,30 @@ extension Result {
         }
     }
     
-    public func map<U>(_ lambda: (_ transform: T) throws -> U) rethrows -> Result<U> {
+    public var maybeError: Error? {
+        switch self {
+        case let .error(error):
+            return error
+        default:
+            return nil
+        }
+    }
+    
+    public func combining<R>(otherResult: PromiseResult<R>) -> PromiseResult<(T, R)> {
+        switch self {
+        case let .value(element):
+            switch otherResult {
+            case let .value(otherElement):
+                return .value(element: (element, otherElement))
+            case let .error(error):
+                return error.toPromiseResult()
+            }
+        case let .error(error):
+            return error.toPromiseResult()
+        }
+    }
+    
+    public func map<U>(_ lambda: (_ transform: T) throws -> U) rethrows -> PromiseResult<U> {
         switch self {
         case let .value(element):
             return .value(element: try lambda(element))
@@ -32,7 +55,7 @@ extension Result {
         }
     }
     
-    public func catchMap<U>(_ lambda: (_ transform: T) throws -> U) -> Result<U> {
+    public func catchMap<U>(_ lambda: (_ transform: T) throws -> U) -> PromiseResult<U> {
         switch self {
         case let .value(element):
             do {
@@ -46,7 +69,7 @@ extension Result {
     }
 }
 
-public func flatten<T>(_ result: Result<Result<T>>) -> Result<T> {
+public func flatten<T>(_ result: PromiseResult<PromiseResult<T>>) -> PromiseResult<T> {
     switch result {
     case let .value(element):
         return element
@@ -55,3 +78,8 @@ public func flatten<T>(_ result: Result<Result<T>>) -> Result<T> {
     }
 }
 
+extension Error {
+    func toPromiseResult<T>() -> PromiseResult<T> {
+        return .error(error: self)
+    }
+}

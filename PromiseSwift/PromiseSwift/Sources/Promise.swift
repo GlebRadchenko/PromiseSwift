@@ -10,9 +10,9 @@ import Foundation
 
 open class Promise<Element> {
     public typealias Function = (_ result: @escaping Resolve) -> Void
-    public typealias Resolve = (Result<Element>) -> Void
+    public typealias Resolve = (PromiseResult<Element>) -> Void
     
-    fileprivate var queue: DispatchQueue
+    var queue: DispatchQueue
     fileprivate var function: Function
     
     public init(queue: DispatchQueue = .main, _ function: @escaping Function) {
@@ -26,14 +26,14 @@ open class Promise<Element> {
     }
     
     @discardableResult
-    open func then<NextElement>(_ completion: @escaping (Result<Element>) -> Result<NextElement>) -> Promise<NextElement> {
+    open func then<NextElement>(_ completion: @escaping (PromiseResult<Element>) -> PromiseResult<NextElement>) -> Promise<NextElement> {
         return Promise<NextElement>(queue: queue) { (resolve) in
             self.execute { resolve(completion($0)) }
         }
     }
     
     @discardableResult
-    open func then<NextElement>(_ completion: @escaping (Result<Element>, @escaping (Result<NextElement>) -> Void) -> Void) -> Promise<NextElement> {
+    open func then<NextElement>(_ completion: @escaping (PromiseResult<Element>, @escaping (PromiseResult<NextElement>) -> Void) -> Void) -> Promise<NextElement> {
         return Promise<NextElement>(queue: queue) { (resolve) in
             self.execute { (result) in completion(result, { resolve($0) }) }
         }
@@ -50,14 +50,14 @@ open class Promise<Element> {
     }
     
     @discardableResult
-    open func chain<NextElement>(_ chaining: @escaping (Result<Element>) -> Promise<NextElement>) -> Promise<NextElement> {
+    open func chain<NextElement>(_ chaining: @escaping (PromiseResult<Element>) -> Promise<NextElement>) -> Promise<NextElement> {
         return Promise<NextElement>(queue: queue) { (resolve) in
             self.execute { (result) in chaining(result).execute(resolve) }
         }
     }
     
     @discardableResult
-    open func chain<NextElement>(_ chaining: @escaping (Result<Element>, _ completion: @escaping (Promise<NextElement>) -> Void) -> Void) -> Promise<NextElement> {
+    open func chain<NextElement>(_ chaining: @escaping (PromiseResult<Element>, _ completion: @escaping (Promise<NextElement>) -> Void) -> Void) -> Promise<NextElement> {
         return Promise<NextElement>(queue: queue) { (resolve) in
             self.execute { (result) in
                 chaining(result) { $0.execute(resolve) }
@@ -90,3 +90,68 @@ open class Promise<Element> {
     }
 }
 
+//MARK: - Combining
+extension Promise {
+    public static func combining<A, B>(queue: DispatchQueue = .main, promiseA: Promise<A>, promiseB: Promise<B>) -> Promise<(A, B)> {
+        return Promise<(A, B)>(queue: queue) { (resolve) in
+            var firstResult: PromiseResult<A>!
+            var secondResult: PromiseResult<B>!
+            
+            let group = DispatchGroup()
+            
+            group.enter()
+            promiseA.execute { (result) in
+                firstResult = result
+                group.leave()
+            }
+            
+            group.enter()
+            promiseB.execute { (result) in
+                secondResult = result
+                group.leave()
+            }
+            
+            group.notify(queue: queue) {
+                resolve(firstResult.combining(otherResult: secondResult))
+            }
+        }
+    }
+    
+    public static func combining(queue: DispatchQueue = .main, promises: Promise<AnyObject>...) -> Promise<[AnyObject]> {
+        return Promise<[AnyObject]>(queue: queue) { (resolve) in
+            var results: [Int: PromiseResult<AnyObject>] = [:]
+            let group = DispatchGroup()
+            
+            promises.enumerated().forEach { (index, prom) in
+                group.enter()
+                prom.execute { (result) in
+                    results[index] = result
+                    group.leave()
+                }
+            }
+            
+            group.notify(queue: queue) {
+                if let errorResult = results.values.first(where: { (result) -> Bool in
+                    return result.maybeError != nil
+                }) {
+                    resolve(errorResult.catchMap { return [$0] })
+                } else {
+                    let elements = results.keys.sorted().flatMap { results[$0]?.unbox() }
+                    resolve(.value(element: elements))
+                }
+            }
+        }
+    }
+}
+
+extension Promise {
+    public var any: Promise<AnyObject> {
+        return map { $0 as AnyObject }
+    }
+    
+    public func map<R>(_ transform: @escaping (Element) throws -> R) -> Promise<R> {
+        return Promise<R>(queue: queue) { (resolve) in
+            self.execute { resolve($0.catchMap(transform)) }
+        }
+    }
+}

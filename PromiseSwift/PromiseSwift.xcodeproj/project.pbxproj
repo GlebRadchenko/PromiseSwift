@@ -15,6 +15,7 @@
 		F7C9E9BE1FCD654400245CD7 /* NetworkPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C9E9BD1FCD654400245CD7 /* NetworkPromise.swift */; };
 		F7C9E9DE1FCD7E4100245CD7 /* Promise+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C9E9DD1FCD7E4100245CD7 /* Promise+UIView.swift */; };
 		F7C9E9E01FCD7F3F00245CD7 /* Promise+NSLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C9E9DF1FCD7F3F00245CD7 /* Promise+NSLayoutConstraint.swift */; };
+		F7E6A8DA206A3BD10064DFE9 /* Promise+UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E6A8D9206A3BD10064DFE9 /* Promise+UITableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,7 @@
 		F7C9E9BD1FCD654400245CD7 /* NetworkPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPromise.swift; sourceTree = "<group>"; };
 		F7C9E9DD1FCD7E4100245CD7 /* Promise+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Promise+UIView.swift"; sourceTree = "<group>"; };
 		F7C9E9DF1FCD7F3F00245CD7 /* Promise+NSLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Promise+NSLayoutConstraint.swift"; sourceTree = "<group>"; };
+		F7E6A8D9206A3BD10064DFE9 /* Promise+UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Promise+UITableView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			children = (
 				F7C9E9B91FCD627500245CD7 /* Promise.swift */,
 				F7C9E9BB1FCD62B500245CD7 /* Result.swift */,
+				F7E6A8D9206A3BD10064DFE9 /* Promise+UITableView.swift */,
 				F7C9E9DD1FCD7E4100245CD7 /* Promise+UIView.swift */,
 				F7C9E9DF1FCD7F3F00245CD7 /* Promise+NSLayoutConstraint.swift */,
 			);
@@ -221,6 +224,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7C9E9BC1FCD62B500245CD7 /* Result.swift in Sources */,
+				F7E6A8DA206A3BD10064DFE9 /* Promise+UITableView.swift in Sources */,
 				F7C9E9BA1FCD627500245CD7 /* Promise.swift in Sources */,
 				F7C9E9E01FCD7F3F00245CD7 /* Promise+NSLayoutConstraint.swift in Sources */,
 				F7C9E9DE1FCD7E4100245CD7 /* Promise+UIView.swift in Sources */,
