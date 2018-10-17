@@ -12,7 +12,7 @@ import UIKit
 extension Promise where Element: UITableView {
     func insertRows(at paths: [IndexPath],
                     onBeforeInsert: @escaping ([IndexPath]) -> Void,
-                    animation: UITableViewRowAnimation = .fade,
+                    animation: UITableView.RowAnimation = .fade,
                     duration: TimeInterval = 0.3) -> Promise<Element> {
         
         return Promise() { (resolve) in
@@ -30,7 +30,7 @@ extension Promise where Element: UITableView {
     
     func insertRow(at path: IndexPath,
                    onBeforeInsert: @escaping (IndexPath) -> Void,
-                   animation: UITableViewRowAnimation = .fade,
+                   animation: UITableView.RowAnimation = .fade,
                    duration: TimeInterval = 0.3) -> Promise<Element> {
         
         return insertRows(at: [path],
@@ -41,7 +41,7 @@ extension Promise where Element: UITableView {
     
     func reloadRows(at paths: [IndexPath],
                     onBeforeReload: @escaping ([IndexPath]) -> Void,
-                    animation: UITableViewRowAnimation = .fade,
+                    animation: UITableView.RowAnimation = .fade,
                     duration: TimeInterval = 0.3) -> Promise<Element> {
         
         return Promise() { (resolve) in
@@ -59,7 +59,7 @@ extension Promise where Element: UITableView {
     
     func reloadRow(at path: IndexPath,
                    onBeforeReload: @escaping (IndexPath) -> Void,
-                   animation: UITableViewRowAnimation = .fade,
+                   animation: UITableView.RowAnimation = .fade,
                    duration: TimeInterval = 0.3) -> Promise<Element> {
         
         return reloadRows(at: [path],
@@ -70,7 +70,7 @@ extension Promise where Element: UITableView {
     
     func deleteRows(at paths: [IndexPath],
                     onBeforeDelete: @escaping ([IndexPath]) -> Void,
-                    animation: UITableViewRowAnimation = .fade,
+                    animation: UITableView.RowAnimation = .fade,
                     duration: TimeInterval = 0.3) -> Promise<Element> {
         
         return Promise() { (resolve) in
@@ -88,7 +88,7 @@ extension Promise where Element: UITableView {
     
     func deleteRow(at path: IndexPath,
                    onBeforeDelete: @escaping (IndexPath) -> Void,
-                   animation: UITableViewRowAnimation = .fade,
+                   animation: UITableView.RowAnimation = .fade,
                    duration: TimeInterval = 0.3) -> Promise<Element> {
         
         return deleteRows(at: [path],

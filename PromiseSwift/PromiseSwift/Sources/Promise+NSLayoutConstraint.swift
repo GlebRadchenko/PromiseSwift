@@ -11,7 +11,7 @@ import UIKit
 
 extension Promise where Element: NSLayoutConstraint {
     public func animate(withDuration duration: TimeInterval,
-                        options: UIViewAnimationOptions = [],
+                        options: UIView.AnimationOptions = [],
                         view: UIView,
                         transform: @escaping (_ constraint: NSLayoutConstraint) -> Void) -> Promise<Element> {
         return Promise() { (resolve) in

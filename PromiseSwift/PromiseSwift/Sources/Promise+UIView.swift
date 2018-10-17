@@ -11,7 +11,7 @@ import UIKit
 
 extension Promise where Element: UIView {
     public func animate(withDuration duration: TimeInterval,
-                        options: UIViewAnimationOptions = [],
+                        options: UIView.AnimationOptions = [],
                         animations: @escaping (_ view: UIView) -> Void) -> Promise<Element> {
         return Promise() { (resolve) in
             self.execute { (result) in

@@ -136,7 +136,7 @@ extension Promise {
                 }) {
                     resolve(errorResult.catchMap { return [$0] })
                 } else {
-                    let elements = results.keys.sorted().flatMap { results[$0]?.unbox() }
+                    let elements = results.keys.sorted().compactMap { results[$0]?.unbox() }
                     resolve(.value(element: elements))
                 }
             }
