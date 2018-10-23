@@ -6,6 +6,7 @@
 //  Copyright © 2018 Gleb Radchenko. All rights reserved.
 //
 
+#if os(iOS)
 import Foundation
 import UIKit
 
@@ -98,3 +99,4 @@ extension Promise where Element: UITableView {
     }
 }
 
+#endif

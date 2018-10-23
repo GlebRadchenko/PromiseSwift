@@ -6,6 +6,8 @@
 //  Copyright © 2017 Gleb Radchenko. All rights reserved.
 //
 
+#if os(iOS)
+
 import Foundation
 import UIKit
 
@@ -27,3 +29,4 @@ extension Promise where Element: NSLayoutConstraint {
     }
 }
 
+#endif
