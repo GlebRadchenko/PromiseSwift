@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias AnyPromise = Promise<Any>
+
 open class Promise<Element> {
     public typealias Function = (_ result: @escaping Resolve) -> Void
     public typealias Resolve = (PromiseResult<Element>) -> Void
@@ -117,9 +119,9 @@ extension Promise {
         }
     }
     
-    public static func combining(queue: DispatchQueue = .main, promises: Promise<AnyObject>...) -> Promise<[AnyObject]> {
-        return Promise<[AnyObject]>(queue: queue) { (resolve) in
-            var results: [Int: PromiseResult<AnyObject>] = [:]
+    public static func combining(queue: DispatchQueue = .main, promises: AnyPromise...) -> Promise<[Any]> {
+        return Promise<[Any]>(queue: queue) { (resolve) in
+            var results: [Int: PromiseResult<Any>] = [:]
             let group = DispatchGroup()
             
             promises.enumerated().forEach { (index, prom) in
@@ -145,8 +147,8 @@ extension Promise {
 }
 
 extension Promise {
-    public var any: Promise<AnyObject> {
-        return map { $0 as AnyObject }
+    public var any: AnyPromise {
+        return map { $0 as Any }
     }
     
     public func map<R>(_ transform: @escaping (Element) throws -> R) -> Promise<R> {

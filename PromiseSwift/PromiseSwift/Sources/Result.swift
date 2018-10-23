@@ -14,6 +14,15 @@ public enum PromiseResult<T> {
 }
 
 extension PromiseResult {
+    public func valueOrThrow() throws -> T {
+        switch self {
+        case let .value(element):
+            return element
+        case let .error(error):
+            throw error
+        }
+    }
+    
     public func unbox() -> T? {
         switch self {
         case let .value(element):
