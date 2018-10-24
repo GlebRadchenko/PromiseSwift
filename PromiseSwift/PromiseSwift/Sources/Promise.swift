@@ -14,7 +14,7 @@ open class Promise<Element> {
     public typealias Function = (_ result: @escaping Resolve) -> Void
     public typealias Resolve = (PromiseResult<Element>) -> Void
     
-    var queue: DispatchQueue
+    public var queue: DispatchQueue
     fileprivate var function: Function
     
     public init(queue: DispatchQueue = .main, _ function: @escaping Function) {
