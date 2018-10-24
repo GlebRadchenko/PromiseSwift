@@ -24,7 +24,7 @@ open class Promise<Element> {
     
     public init(queue: DispatchQueue = .main, _ element: Element) {
         self.queue = queue
-        self.function = { $0(.value(element: element)) }
+        self.function = { $0(.value(element)) }
     }
     
     @discardableResult
@@ -139,7 +139,7 @@ extension Promise {
                     resolve(errorResult.catchMap { return [$0] })
                 } else {
                     let elements = results.keys.sorted().compactMap { results[$0]?.unbox() }
-                    resolve(.value(element: elements))
+                    resolve(.value(elements))
                 }
             }
         }

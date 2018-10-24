@@ -9,8 +9,8 @@
 import Foundation
 
 public enum PromiseResult<T> {
-    case value(element: T)
-    case error(error: Error)
+    case value(T)
+    case error(Error)
 }
 
 extension PromiseResult {
@@ -46,7 +46,7 @@ extension PromiseResult {
         case let .value(element):
             switch otherResult {
             case let .value(otherElement):
-                return .value(element: (element, otherElement))
+                return .value((element, otherElement))
             case let .error(error):
                 return error.toPromiseResult()
             }
@@ -58,9 +58,9 @@ extension PromiseResult {
     public func map<U>(_ lambda: (_ transform: T) throws -> U) rethrows -> PromiseResult<U> {
         switch self {
         case let .value(element):
-            return .value(element: try lambda(element))
+            return .value(try lambda(element))
         case let .error(error):
-            return .error(error: error)
+            return .error(error)
         }
     }
     
@@ -68,12 +68,12 @@ extension PromiseResult {
         switch self {
         case let .value(element):
             do {
-                return .value(element: try lambda(element))
+                return .value(try lambda(element))
             } catch {
-                return .error(error: error)
+                return .error(error)
             }
         case let .error(error):
-            return .error(error: error)
+            return .error(error)
         }
     }
 }
@@ -83,12 +83,12 @@ public func flatten<T>(_ result: PromiseResult<PromiseResult<T>>) -> PromiseResu
     case let .value(element):
         return element
     case let .error(error):
-        return .error(error: error)
+        return .error(error)
     }
 }
 
 extension Error {
     func toPromiseResult<T>() -> PromiseResult<T> {
-        return .error(error: self)
+        return .error(self)
     }
 }
